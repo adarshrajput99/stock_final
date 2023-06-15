@@ -29,51 +29,52 @@ class data_fetch extends Controller
         ]);
 
         $response = curl_exec($curl);
-        if ($response !== false) {
-            $data = json_decode($response, true);
+        dd($response);
+        // if ($response !== false) {
+        //     $data = json_decode($response, true);
 
-            // Assuming the API response structure matches the expected format
+        //     // Assuming the API response structure matches the expected format
 
-            // Process and store the option chain data
-            foreach ($data['records']['data'] as $option) {
-                try{
-                    $expiryDate = $option['expiryDate'];
-                $strikePrice = $option['strikePrice'];
-                $symbol = $option['CE']['underlying'] ?? ($option['PE']['underlying'] ?? '');
-                try{
-                    $optionType = ($option['CE'] !== null) ? 'CE' : 'PE';
-                }
-                catch(\Exception $e){
-                    $optionType = ($option['PE'] !== null) ? 'PE' : 'CE';
-                }
+        //     // Process and store the option chain data
+        //     foreach ($data['records']['data'] as $option) {
+        //         try{
+        //             $expiryDate = $option['expiryDate'];
+        //         $strikePrice = $option['strikePrice'];
+        //         $symbol = $option['CE']['underlying'] ?? ($option['PE']['underlying'] ?? '');
+        //         try{
+        //             $optionType = ($option['CE'] !== null) ? 'CE' : 'PE';
+        //         }
+        //         catch(\Exception $e){
+        //             $optionType = ($option['PE'] !== null) ? 'PE' : 'CE';
+        //         }
 
-                $lastPrice = $option['CE']['lastPrice'] ?? $option['PE']['lastPrice'];
-                $change = $option['CE']['change'] ?? $option['PE']['change'];
-                $percentChange = $option['CE']['pChange'] ?? $option['PE']['pChange'];
+        //         $lastPrice = $option['CE']['lastPrice'] ?? $option['PE']['lastPrice'];
+        //         $change = $option['CE']['change'] ?? $option['PE']['change'];
+        //         $percentChange = $option['CE']['pChange'] ?? $option['PE']['pChange'];
 
-                DB::table('option_chain')->insert([
-                    'symbol' => $symbol,
-                    'expiry_date' => date('Y-m-d', strtotime($expiryDate)),
-                    'option_type' => $optionType,
-                    'strike_price' => $strikePrice,
-                    'last_price' => $lastPrice,
-                    'change' => $change,
-                    'percent_change' => $percentChange,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-                }
-                catch(Exception $e){
-                    continue;
-                }
+        //         DB::table('option_chain')->insert([
+        //             'symbol' => $symbol,
+        //             'expiry_date' => date('Y-m-d', strtotime($expiryDate)),
+        //             'option_type' => $optionType,
+        //             'strike_price' => $strikePrice,
+        //             'last_price' => $lastPrice,
+        //             'change' => $change,
+        //             'percent_change' => $percentChange,
+        //             'created_at' => now(),
+        //             'updated_at' => now(),
+        //         ]);
+        //         }
+        //         catch(Exception $e){
+        //             continue;
+        //         }
 
-            }
+        //     }
 
-            
 
-        } else {
-            $this->error('Failed to fetch option chain data: ' . curl_error($curl));
-        }
+
+        // } else {
+        //     $this->error('Failed to fetch option chain data: ' . curl_error($curl));
+        // }
 
         curl_close($curl);
 
