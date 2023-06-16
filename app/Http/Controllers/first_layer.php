@@ -26,6 +26,21 @@ class first_layer extends Controller
     function formula_1(){
     }
 
+    //Date to day Convertor
+    public function showDay($date)
+    {
+        $day = Carbon::parse($date)->format('l');
+
+        return $day;
+    }
+
+    public function showMonth($date)
+    {
+        $month = Carbon::parse($date)->format('F');
+
+        return $month;
+    }
+
 
     //Formula 2
     function avg_day_profit(){
@@ -107,7 +122,7 @@ class first_layer extends Controller
         //return max diff/peak * 100
     }
 
-
+    //formula 11
     function mdd_recovery(){
         $total_loss_by_mdd = $loss_under_mdd;
         /* loop after mdd
@@ -119,5 +134,55 @@ class first_layer extends Controller
         return $count;
     }
 
+    // formula 12
+    function max_win_streak(){
+        $count =0;
+        $streak_count=0;
+        foreach($this->$day_profit_loss as $key=>$value){
+            if($value > 0)
+                $streak_count++;
+            else{
+                if($count<$streak_count){
+                    $count = $streak_count;
+                }
+                $streak_count = 0;
+            }
+        }
 
+    }
+
+    //formula 13
+    function max_loose_streak(){
+        $count =0;
+        $streak_count=0;
+        foreach($this->$day_profit_loss as $key=>$value){
+            if($value < 0)
+                $streak_count++;
+            else{
+                if($count<$streak_count){
+                    $count = $streak_count;
+                }
+                $streak_count = 0;
+            }
+        }
+
+    }
+
+    //formula 14
+    function day_profit(){
+        $day_arr=[];
+        foreach($this->$day_profit_loss as $key=>$value){
+            $day_arr[$this->showDay($key)]+=$value;
+        }
+        return $day_arr;
+    }
+
+    //formula 15
+     function month_profit(){
+        $month_arr=[];
+        foreach($this->$day_profit_loss as $key=>$value){
+            $month_arr[$this->showMonth($key)]+=$value;
+        }
+        return $month_arr;
+    }
 }
