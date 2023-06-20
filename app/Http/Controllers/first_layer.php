@@ -8,21 +8,28 @@ use DB;
 class first_layer extends Controller
 {
     //Key value pair of profit and loss
-    private $day_profit_loss  = [];
+    public $day_profit_loss;
 
-    private $total_profit = 0;
-    private $max_profit = PHP_INT_MIN;
-    private $max_loss = PHP_INT_MAX;
-    private $total_days = 0;
+    private $total_profit;
+    private $max_profit;
+    private $max_loss;
+    private $total_days;
 
-    public function __construct(){
-        //fills the day profit after fetching the data
-        $this->$total_days=count($this->$day_profit_loss);
-        foreach($this->$day_profit_loss as $key=>$value){
-            if($value>0)
-                $this->$total_profit+=$value;
-        }
+    public  function __construct() {
+         $this->total_profit = 0;
+         $this->max_profit = PHP_INT_MIN;
+         $this->max_loss = PHP_INT_MAX;
+         $this->total_days = 0;
     }
+
+     function setter($val){
+        $this->day_profit_loss = $val;
+        $this->total_days=count($this->day_profit_loss);
+        foreach($this->day_profit_loss as $key=>$value){
+            if($value>0)
+                $this->total_profit+=$value;
+        }
+     }
     function formula_1(){
     }
 
@@ -44,34 +51,34 @@ class first_layer extends Controller
 
     //Formula 2
     function avg_day_profit(){
-        $total_profit = $this->$total_profit;
-        $total_days = $this->$total_days;
+        $total_profit = $this->total_profit;
+        $total_days = $this->total_days;
         $final_value = $total_profit/$total_days;
-        return final_value;
+        return $final_value;
     }
 
     //formula 3
     function max_profit(){
-        foreach($this->$day_profit_loss as $key=>$value){
-            if($value>$this->$max_profit)
-                $this->$max_profit = $value;
+        foreach($this->day_profit_loss as $key=>$value){
+            if($value>$this->max_profit)
+                $this->max_profit = $value;
         }
-        return $this->$max_profit;
+        return $this->max_profit;
     }
 
     //formula 4
     function max_loss(){
-        foreach($this->$day_profit_loss as $key=>$value){
-            if($value<$this->$max_loss)
-                $this->$max_profit = $value;
+        foreach($this->day_profit_loss as $key=>$value){
+            if($value<$this->max_loss)
+                $this->max_profit = $value;
         }
-        return $this->$max_loss;
+        return $this->max_loss;
     }
 
     //formula 5
     function win_percent_days(){
         $count =0;
-        foreach($this->$day_profit_loss as $key=>$value){
+        foreach($this->day_profit_loss as $key=>$value){
             if($value > 0)
                 $count++;
         }
@@ -82,12 +89,12 @@ class first_layer extends Controller
     //formula 6
     function loss_percent_days(){
         $count =0;
-        foreach($this->$day_profit_loss as $key=>$value){
+        foreach($this->day_profit_loss as $key=>$value){
             if($value < 0)
                 $count++;
         }
 
-        return ($count/$this->$total_days)*100;
+        return ($count/$this->total_days)*100;
     }
 
     //formula 7
@@ -98,7 +105,7 @@ class first_layer extends Controller
     //formula 8
     function avg_profit_on_win_days(){
         $profit_sum=0;
-        foreach($this->$day_profit_loss as $key=>$value){
+        foreach($this->day_profit_loss as $key=>$value){
             if($value > 0)
                 $profit_sum+=$value;
         }
@@ -108,7 +115,7 @@ class first_layer extends Controller
     //formula 9
     function avg_loss_On_loss_days(){
         $loss_sum=0;
-        foreach($this->$day_profit_loss as $key=>$value){
+        foreach($this->day_profit_loss as $key=>$value){
             if($value < 0)
                 $loss_sum+=$value;
         }
@@ -138,7 +145,7 @@ class first_layer extends Controller
     function max_win_streak(){
         $count =0;
         $streak_count=0;
-        foreach($this->$day_profit_loss as $key=>$value){
+        foreach($this->day_profit_loss as $key=>$value){
             if($value > 0)
                 $streak_count++;
             else{
@@ -155,7 +162,7 @@ class first_layer extends Controller
     function max_loose_streak(){
         $count =0;
         $streak_count=0;
-        foreach($this->$day_profit_loss as $key=>$value){
+        foreach($this->day_profit_loss as $key=>$value){
             if($value < 0)
                 $streak_count++;
             else{
@@ -171,7 +178,7 @@ class first_layer extends Controller
     //formula 14
     function day_profit(){
         $day_arr=[];
-        foreach($this->$day_profit_loss as $key=>$value){
+        foreach($this->day_profit_loss as $key=>$value){
             $day_arr[$this->showDay($key)]+=$value;
         }
         return $day_arr;
@@ -180,7 +187,7 @@ class first_layer extends Controller
     //formula 15
      function month_profit(){
         $month_arr=[];
-        foreach($this->$day_profit_loss as $key=>$value){
+        foreach($this->day_profit_loss as $key=>$value){
             $month_arr[$this->showMonth($key)]+=$value;
         }
         return $month_arr;
